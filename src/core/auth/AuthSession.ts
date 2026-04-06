@@ -7,15 +7,15 @@ export class AuthSession {
 
   async establishStorageState(credentials?: UserCredentials): Promise<void> {
     if (!credentials) {
-      await this.page.goto('/');
-      await this.page.waitForLoadState('networkidle');
+      await this.page.goto('/', { waitUntil: 'domcontentloaded' });
+      await expect(this.page.getByAltText('Website for automation practice'), 'The home page logo should be visible while establishing anonymous storage state.').toBeVisible();
       return;
     }
 
-    await this.page.goto('/login');
-    await this.page.locator('input[data-qa="login-email"]').fill(credentials.email);
-    await this.page.locator('input[data-qa="login-password"]').fill(credentials.password);
-    await this.page.locator('button[data-qa="login-button"]').click();
-    await expect(this.page.locator('a:has-text("Logged in as")')).toBeVisible();
+    await this.page.goto('/login', { waitUntil: 'domcontentloaded' });
+    await this.page.getByPlaceholder('Email').first().fill(credentials.email);
+    await this.page.getByPlaceholder('Password').fill(credentials.password);
+    await this.page.getByRole('button', { name: 'Login' }).click();
+    await expect(this.page.getByText(/logged in as/i), 'The signed-in banner should be visible while establishing authenticated storage state.').toBeVisible();
   }
 }

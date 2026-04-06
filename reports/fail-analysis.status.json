@@ -1,0 +1,11 @@
+{
+  "updated_at": "2026-04-06T01:58:55+00:00",
+  "stage": "completed",
+  "detail": "Failure analysis completed successfully.",
+  "analyzer_exit_code": 0,
+  "playwright_exit_code": 1,
+  "markdown_report": "reports/fail-analysis.md",
+  "json_report": "reports/fail-analysis.json",
+  "md_updated": true,
+  "json_updated": true
+}

@@ -10,3 +10,10 @@ dist
 *.log
 .idea
 .vscode
+artifacts/playwright-report.json
+artifacts/playwright-run.log
+reports/fail-analysis.md
+reports/fail-analysis.json
+__pycache__
+*.pyc
+.venv

@@ -19,6 +19,7 @@
       "@utils/*": ["src/utils/*"],
       "@core/*": ["src/core/*"],
       "@config/*": ["src/config/*"],
+      "@models/*": ["src/models/*"],
       "@builders/*": ["test-data/builders/*"],
       "@data/*": ["test-data/*"],
       "@tests/*": ["tests/*"]
