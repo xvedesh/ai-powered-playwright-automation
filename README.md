@@ -1,62 +1,94 @@
 # AI-Powered Playwright Automation Framework
 
-Enterprise-style Playwright + TypeScript automation framework for UI, API, and integration testing, designed as a portfolio-grade hybrid quality engineering platform. The framework is built to be practical first: scalable structure, clean test architecture, anti-flakiness protections, and a Python-based AI failure analysis layer that turns failed runs into actionable diagnostics.
+![Playwright](https://img.shields.io/badge/Playwright-E2E%20Automation-2EAD33?style=for-the-badge&logo=playwright)
+![TypeScript](https://img.shields.io/badge/TypeScript-Strongly%20Typed-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![AI Diagnostics](https://img.shields.io/badge/AI-Automated%20Diagnostics-111827?style=for-the-badge)
+![Enterprise Ready](https://img.shields.io/badge/Enterprise-Scalable%20by%20Design-0F766E?style=for-the-badge)
 
-## Project Overview
+Enterprise-grade Playwright + TypeScript automation framework for UI, API, and integration testing. It is designed for modern quality engineering teams that need reliable execution, actionable diagnostics, and an architecture that can scale from local development to CI pipelines with self-healing-ready foundations.
 
-This repository is built around a modern automation architecture:
+## Value Proposition
 
-- Playwright multi-project execution for setup, UI, API, and integration flows
-- TypeScript-first page objects, fixtures, and service abstractions
-- Reusable builders for test data creation
-- Storage-state based auth setup for realistic browser sessions
-- Global anti-flakiness protections against ad overlays and intrusive popups
-- Python-based failure analyzer agent with Markdown and JSON reports
-- Clean extension points for future AI setup, troubleshooting, and diagnostics agents
+This framework is built to do more than execute tests. It is designed to shorten debugging cycles, reduce operational noise, and improve delivery confidence through automated diagnostics and durable test architecture.
 
-The current framework targets Automation Exercise as a practice system, but the architecture is intentionally reusable and enterprise-oriented.
+What makes it different:
 
-## Architecture Review Summary
+- Automated Diagnostics that convert failed runs into structured root-cause analysis
+- Reduced MTTR through AI-assisted failure triage and ownership-oriented reporting
+- Enterprise Scalability through clean separation of UI, API, setup, fixtures, services, and diagnostics
+- Self-healing-ready design with stable locator patterns, reusable workflows, and modular analyzer components
+- Reliability-focused execution with infrastructure-level protections against flaky browser behavior
 
-Current strengths:
+## AI-Powered Diagnostics
 
-- Clear separation between `tests`, `pages`, `api`, `fixtures`, `config`, and `tools`
-- Service-based API layer instead of tests calling raw HTTP directly
-- Shared fixture composition for dependency injection and clean test signatures
-- Builders for domain test data instead of inline hardcoded payloads
-- Dedicated setup project for auth/session preparation
-- Analyzer pipeline isolated from Playwright-specific parsing so it can evolve later for other frameworks
+The AI Failure Analyzer is the primary differentiator of this framework. Instead of leaving teams with raw stack traces and scattered artifacts, failed runs are transformed into a clear diagnostic report that helps engineers move from symptom to likely cause faster.
 
-Key hardening already added:
+### Why It Matters
 
-- Ad/network blocking at the browser layer
-- Auto-dismiss handling for common ad/interstitial overlays
-- User-centric locator strategy in primary page objects
-- `test.step(...)` usage across core UI, API, and integration flows
-- Descriptive assertion messages for easier CI diagnosis
-- Failure analysis wrapper with predictable report output
-- Optional OpenAI enrichment layered on top of an offline rule-based analyzer
+- Reduces MTTR by generating automated root-cause analysis immediately after failed runs
+- Correlates Playwright JSON output, logs, stack traces, and test artifacts
+- Detects repeated patterns and clusters related failures
+- Produces both human-readable Markdown and machine-consumable JSON outputs
+- Works offline by default, with optional OpenAI enrichment for higher-quality narrative summaries
 
-Current practical guidance:
+### How to Use AI Insights
 
-- Prefer `npm run test:*` wrapper scripts over raw `playwright test`
-- Use generated analyzer reports as the source of truth after failures
-- Treat `test:raw`, `test:debug`, and `test:ui-mode` as direct Playwright runs that do not automatically refresh AI analysis
+Trigger analysis:
 
-## Key Features
+```bash
+npm run test:analyze
+```
 
-- UI, API, and integration coverage in one repository
-- Chromium and Firefox execution with WebKit-ready structure
-- Parallel Playwright execution with configurable worker scaling
-- Enterprise-style page object model and service layer
-- Global anti-flakiness protections for ads and overlays
-- Auth setup with reusable `storageState`
-- Reusable test data builders
-- AI-ready failure diagnostics with offline fallback
-- OpenAI-enhanced summary layer when configured
-- Predictable report and artifact paths for local and CI usage
+Primary report location:
 
-## Tech Stack
+```text
+reports/fail-analysis.md
+```
+
+How it works:
+
+- Offline Rule-based analysis runs first and performs the core reasoning
+- Optional OpenAI enrichment adds a higher-level summary when `OPENAI_API_KEY` is configured
+- If OpenAI is unavailable, the analyzer still produces local reports without blocking execution
+
+### Diagnostic Inputs
+
+The analyzer evaluates available execution evidence, including:
+
+- `artifacts/playwright-report.json`
+- `artifacts/playwright-run.log`
+- `test-results/`
+- stack traces and assertion failures
+- timeouts, locator failures, and setup failures
+- screenshots, videos, and related error artifacts
+
+### Diagnostic Outputs
+
+Primary outputs:
+
+- `reports/fail-analysis.md`
+- `reports/fail-analysis.json`
+- `reports/fail-analysis.status.json`
+
+Supporting execution artifacts:
+
+- `artifacts/playwright-report.json`
+- `artifacts/playwright-run.log`
+
+## Architecture & Tech Stack
+
+The framework follows an enterprise testing architecture that separates concerns cleanly and supports long-term maintainability.
+
+### Architecture Highlights
+
+- `tests/` contains setup, UI, API, and integration suites with clear execution boundaries
+- `src/pages/` implements page objects aligned to business workflows
+- `src/api/` provides service abstractions so tests validate behavior, not raw HTTP plumbing
+- `src/fixtures/` centralizes shared browser and dependency injection behavior
+- `src/core/` contains cross-cutting capabilities such as auth state and browser protections
+- `tools/failure_analyzer/` isolates the diagnostics engine into collectors, parsers, analyzers, and reporters
+
+### Tech Stack
 
 - Playwright
 - TypeScript
@@ -65,98 +97,41 @@ Current practical guidance:
 - OpenAI Python SDK
 - dotenv
 
-## Project Structure
+### Execution Model
 
-```text
-.
-├── src
-│   ├── agents
-│   ├── api
-│   │   ├── core
-│   │   │   └── ApiClient.ts
-│   │   ├── models
-│   │   │   ├── Product.ts
-│   │   │   └── User.ts
-│   │   └── services
-│   │       ├── ProductsService.ts
-│   │       └── UsersService.ts
-│   ├── config
-│   │   ├── env.ts
-│   │   └── paths.ts
-│   ├── core
-│   │   ├── auth
-│   │   │   └── AuthSession.ts
-│   │   ├── browser
-│   │   │   └── AdGuard.ts
-│   │   └── workflows
-│   │       └── AutomationExerciseFlows.ts
-│   ├── fixtures
-│   │   └── test.ts
-│   ├── models
-│   │   ├── ContactMessage.ts
-│   │   ├── PaymentDetails.ts
-│   │   ├── ProductReview.ts
-│   │   └── UserRegistration.ts
-│   └── pages
-│       ├── BasePage.ts
-│       ├── AccountCreatedPage.ts
-│       ├── AccountDeletedPage.ts
-│       ├── CartPage.ts
-│       ├── CheckoutPage.ts
-│       ├── ContactUsPage.ts
-│       ├── EnterAccountInformationPage.ts
-│       ├── HomePage.ts
-│       ├── LoggedHomePage.ts
-│       ├── LoginSignupPage.ts
-│       ├── PaymentPage.ts
-│       ├── ProductDetailPage.ts
-│       ├── ProductsPage.ts
-│       └── TestCasesPage.ts
-├── test-data
-│   ├── builders
-│   │   ├── ContactMessageBuilder.ts
-│   │   ├── PaymentDetailsBuilder.ts
-│   │   ├── ProductReviewBuilder.ts
-│   │   ├── ProductSearchBuilder.ts
-│   │   ├── UserCredentialsBuilder.ts
-│   │   └── UserRegistrationBuilder.ts
-│   └── files
-│       └── contact-upload.txt
-├── tests
-│   ├── api-tests
-│   ├── integration-tests
-│   ├── setup
-│   │   └── auth.setup.ts
-│   └── ui-tests
-├── tools
-│   ├── failure_analyzer
-│   │   ├── analyzers
-│   │   ├── collectors
-│   │   ├── models
-│   │   ├── parsers
-│   │   ├── reporters
-│   │   └── utils
-│   ├── failure_analyzer_smoke_test.py
-│   └── run_playwright_with_analysis.py
-├── artifacts
-├── reports
-├── playwright.config.ts
-├── requirements.txt
-├── tsconfig.json
-├── .env.example
-└── README.md
-```
+Current Playwright project separation:
 
-## Installation
+- `setup` for reusable authentication and browser state preparation
+- `api` for service-level and contract-oriented validation
+- `chromium` for UI coverage in Chrome
+- `firefox` for UI coverage in Firefox
+- `integration-chromium` for authenticated end-to-end integration flows
 
-Install Node and Playwright dependencies:
+This model supports predictable scaling across local execution and CI while keeping setup, browser, and API responsibilities intentionally decoupled.
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js
+- Python 3
+- Playwright browser dependencies
+
+### Installation
+
+Install Node.js dependencies:
 
 ```bash
 npm install
+```
+
+Install Playwright browsers:
+
+```bash
 npx playwright install
 ```
 
-Create the local Python environment for the analyzer:
+Create the local Python environment for diagnostics:
 
 ```bash
 npm run python:setup
@@ -168,9 +143,7 @@ Create your environment file:
 cp .env.example .env
 ```
 
-## Environment Configuration
-
-Recommended `.env` shape:
+### Recommended Environment Configuration
 
 ```env
 BASE_URL=https://automationexercise.com
@@ -186,18 +159,14 @@ FAILURE_ANALYZER_OPENAI_TIMEOUT_SECONDS=45
 FAILURE_ANALYZER_OPENAI_BASE_URL=https://api.openai.com/v1/responses
 ```
 
-Notes:
+Environment behavior:
 
 - `AUTH_EMAIL` and `AUTH_PASSWORD` are optional
-- when auth credentials are present, setup creates authenticated browser state
-- when auth credentials are absent, setup still creates a reusable baseline state
-- `OPENAI_API_KEY` is optional
-- the failure analyzer works without OpenAI
-- OpenAI is used only as a summary/enrichment layer on top of the offline analyzer
+- authenticated browser state is created when credentials are present
+- a stable anonymous baseline state is created when credentials are absent
+- OpenAI enrichment is optional and never replaces the offline analyzer
 
-## Running Tests
-
-Recommended commands:
+### Recommended Commands
 
 ```bash
 npm test
@@ -213,355 +182,116 @@ npm run test:analyze:ci
 Useful supporting commands:
 
 ```bash
-npm run python:setup
-npm run analyzer:test
-npm run analyzer:run
 npm run test:setup
+npm run test:headed
+npm run test:debug
+npm run test:ui-mode
+npm run analyzer:run
+npm run analyzer:test
 npm run typecheck
 npm run report
 ```
 
-Run with a fixed worker count:
+Worker scaling examples:
 
 ```bash
 PLAYWRIGHT_WORKERS=4 npm run test:ui
 PLAYWRIGHT_WORKERS=4 npm run test:analyze
-```
-
-Run with percentage-based workers:
-
-```bash
 PLAYWRIGHT_WORKERS=75% npm run test:ui
 ```
 
-## Important Execution Behavior
+### Project Structure
 
-The framework has two run modes in practice:
-
-Analyzer-backed runs:
-
-- `npm test`
-- `npm run test:ui`
-- `npm run test:api`
-- `npm run test:integration`
-- `npm run test:chromium`
-- `npm run test:firefox`
-- `npm run test:analyze`
-- `npm run test:analyze:ci`
-
-These commands:
-
-1. run Playwright
-2. write Playwright JSON output
-3. if failures exist, trigger the Python analyzer
-4. write AI failure reports
-
-Direct Playwright runs:
-
-- `npm run test:raw`
-- `npm run test:debug`
-- `npm run test:ui-mode`
-- direct `npx playwright test ...`
-
-These commands do not automatically regenerate the AI analysis report.
-
-If you use a direct Playwright run and want the report afterward, run:
-
-```bash
-npm run analyzer:run
+```text
+<project-root>/
+├── src/
+│   ├── api/
+│   ├── config/
+│   ├── core/
+│   ├── fixtures/
+│   ├── models/
+│   └── pages/
+├── test-data/
+├── tests/
+│   ├── api-tests/
+│   ├── integration-tests/
+│   ├── setup/
+│   └── ui-tests/
+├── tools/
+│   ├── failure_analyzer/
+│   ├── failure_analyzer_smoke_test.py
+│   └── run_playwright_with_analysis.py
+├── artifacts/
+├── reports/
+├── playwright.config.ts
+├── requirements.txt
+└── README.md
 ```
 
-## Playwright Projects
+## Anti-Flakiness & Reliability
 
-Current project model:
+Reliability in this framework is treated as an architectural concern, not a collection of isolated fixes. The design aims to create stable, repeatable execution in noisy real-world environments and provide a foundation for self-healing-ready automation.
 
-- `setup`
-  - prepares reusable `storageState`
-- `api`
-  - API/service-level validations
-- `chromium`
-  - UI suite in Chrome
-- `firefox`
-  - UI suite in Firefox
-- `integration-chromium`
-  - integration flows using shared auth state
+### Reliability Architecture
 
-This keeps setup, UI, API, and integration responsibilities separated in a way that scales well.
+The framework embeds anti-flakiness controls into shared infrastructure so every suite benefits consistently:
 
-## Anti-Flakiness Strategy
+- Request-level ad and tracker suppression reduces interference from third-party scripts and injected overlays
+- Shared overlay auto-dismiss behavior neutralizes common modal interruptions before they destabilize user flows
+- Navigation recovery logic protects journeys from external URL fragment pollution such as `#google_vignette`
+- Storage-state based authentication minimizes repeated setup steps and reduces session instability
+- Standardized `test.step(...)` usage improves observability and diagnostics quality in local and CI execution
 
-The framework now includes explicit protections against the biggest sources of unstable UI automation on public practice sites.
+### Locator Strategy as an Architectural Standard
 
-### 1. Ad Blocking
+Selector design is treated as a maintainability decision aligned to user intent and long-term resilience:
 
-Global request blocking is applied through [AdGuard.ts](/Users/vivedesh/ai-powered-playwright-automation/src/core/browser/AdGuard.ts) and installed via the shared fixture in [test.ts](/Users/vivedesh/ai-powered-playwright-automation/src/fixtures/test.ts).
+- `getByRole()` for controls and navigational elements
+- `getByLabel()` and `getByPlaceholder()` for form interactions
+- `getByText()` for business-content validation
+- `getByAltText()` for visual identity elements
+- `getByTestId()` only when semantic locators are insufficient
+- CSS or ID selectors only when the application DOM requires a lower-level fallback
 
-Blocked domains include patterns such as:
+This strategy improves readability, reduces brittleness, and supports future self-healing and automated locator diagnostics.
 
-- `googleads`
-- `doubleclick`
-- `google-analytics`
-- `facebook.net`
+## CI/CD Integration
 
-This reduces noise from ads, tracking scripts, and interstitial injection points.
+The framework is designed for CI-first execution, artifact traceability, and fast diagnostic handoff.
 
-### 2. Overlay Auto-Dismiss
+### CI Execution Model
 
-The shared browser fixture also registers global locator handlers that best-effort dismiss common popups and interstitial controls like:
+- Analyzer-backed commands generate structured failure reports as part of the execution flow
+- JSON reporting enables downstream processing, dashboards, and future automated remediation workflows
+- Status tracking through `reports/fail-analysis.status.json` makes analyzer progress explicit
+- HTML report generation is configured with `open: 'never'` for non-interactive pipeline stability
+- Retry, trace, screenshot, and video policies are already tuned for practical CI diagnosis
 
-- `Close`
-- `Dismiss`
-- `X`
-- `×`
-
-This is especially useful on public automation practice sites that inject modal interruptions.
-
-### 3. URL Recovery
-
-Shared navigation helpers in [BasePage.ts](/Users/vivedesh/ai-powered-playwright-automation/src/pages/BasePage.ts) include recovery for external fragment noise such as `#google_vignette`, so tests can return to intended routes instead of failing on irrelevant ad behavior.
-
-## Locator Strategy
-
-The framework has been refactored toward Playwright’s preferred locator hierarchy:
-
-- `getByRole()` for buttons, links, headings, and controls
-- `getByLabel()` and `getByPlaceholder()` for form inputs
-- `getByText()` for static content validation
-- `getByAltText()` for images and identity markers
-- `getByTestId()` only as a fallback when semantic locators are not enough
-- stable CSS/id locators only when the application DOM requires them
-
-The goal is to keep selectors readable, resilient, and tied to user intent rather than brittle page structure.
-
-## Readability Standards
-
-Core test suites were refactored to use:
-
-- `await test.step('Business-oriented description', async () => { ... })`
-- descriptive page object method names
-- custom assertion messages for CI and failure analysis clarity
-
-This makes tests easier to debug and easier to read as business workflows rather than low-level UI scripts.
-
-## API Layer Design
-
-The API layer is service-based instead of exposing raw generic clients directly to tests.
-
-Key pieces:
-
-- [ApiClient.ts](/Users/vivedesh/ai-powered-playwright-automation/src/api/core/ApiClient.ts)
-- [ProductsService.ts](/Users/vivedesh/ai-powered-playwright-automation/src/api/services/ProductsService.ts)
-- [UsersService.ts](/Users/vivedesh/ai-powered-playwright-automation/src/api/services/UsersService.ts)
-
-This keeps tests focused on business intent and makes the HTTP plumbing reusable and easier to evolve.
-
-## Authentication Strategy
-
-Auth is handled through a dedicated setup project and reusable storage state:
-
-- setup test: [auth.setup.ts](/Users/vivedesh/ai-powered-playwright-automation/tests/setup/auth.setup.ts)
-- session logic: [AuthSession.ts](/Users/vivedesh/ai-powered-playwright-automation/src/core/auth/AuthSession.ts)
-
-Behavior:
-
-- with credentials: authenticated state is created
-- without credentials: a stable anonymous baseline state is created
-
-This keeps UI tests realistic and aligned with Playwright best practices.
-
-## Failure Analyzer Agent
-
-The framework includes a Python-based failure analyzer designed to behave like a practical Senior SDET diagnostic assistant, not just a raw log parser.
-
-### What It Does
-
-- runs detailed post-processing only when failures exist
-- parses Playwright JSON results
-- scans `test-results` artifacts
-- reads captured execution logs
-- analyzes each failed test individually
-- groups failures into shared clusters
-- suggests likely ownership and root cause
-- produces a Markdown report and a JSON report
-- optionally asks OpenAI for a higher-level summary layer
-
-### Analyzer Inputs
-
-The analyzer uses as many of these as are available:
-
-- `artifacts/playwright-report.json`
-- `artifacts/playwright-run.log`
-- `test-results/`
-- stack traces
-- assertion errors
-- timeout failures
-- locator failures
-- setup/auth/fixture failures
-- screenshots, videos, and error-context files
-
-### Analyzer Outputs
-
-Primary reports:
-
-- [fail-analysis.md](/Users/vivedesh/ai-powered-playwright-automation/reports/fail-analysis.md)
-- [fail-analysis.json](/Users/vivedesh/ai-powered-playwright-automation/reports/fail-analysis.json)
-
-Status tracking:
-
-- [fail-analysis.status.json](/Users/vivedesh/ai-powered-playwright-automation/reports/fail-analysis.status.json)
-
-Supporting artifacts:
-
-- [playwright-report.json](/Users/vivedesh/ai-powered-playwright-automation/artifacts/playwright-report.json)
-- [playwright-run.log](/Users/vivedesh/ai-powered-playwright-automation/artifacts/playwright-run.log)
-
-### Where To Look After a Failed Run
-
-If a run fails, check in this order:
-
-1. [fail-analysis.status.json](/Users/vivedesh/ai-powered-playwright-automation/reports/fail-analysis.status.json)
-2. [fail-analysis.md](/Users/vivedesh/ai-powered-playwright-automation/reports/fail-analysis.md)
-3. [fail-analysis.json](/Users/vivedesh/ai-powered-playwright-automation/reports/fail-analysis.json)
-4. [playwright-report.json](/Users/vivedesh/ai-powered-playwright-automation/artifacts/playwright-report.json)
-5. `test-results/<failed-test-folder>/`
-
-### Status File Semantics
-
-The status file helps explain whether the report is still being prepared.
-
-Stages:
-
-- `running_tests`
-  - Playwright execution is still running
-- `analyzing`
-  - Playwright has finished and the analyzer is building reports
-- `completed`
-  - reports have been written successfully
-- `failed`
-  - analyzer itself did not finish successfully
-
-### OpenAI Behavior
-
-OpenAI is optional.
-
-If configured:
-
-- the analyzer still performs its full offline rule-based reasoning first
-- OpenAI is used only to enrich the narrative summary
-- if OpenAI is unavailable, reports are still generated
-
-Important:
-
-- OpenAI connectivity checks no longer block test startup
-- tests run first
-- OpenAI summary is attempted only during failure analysis
-
-### Manual Analyzer Usage
-
-Run Playwright with analysis:
-
-```bash
-npm run test:analyze
-```
-
-Run CI-style analysis:
-
-```bash
-npm run test:analyze:ci
-```
-
-Generate analysis from an existing failed artifact set:
-
-```bash
-npm run analyzer:run
-```
-
-Run analyzer directly:
-
-```bash
-./.venv/bin/python -m tools.failure_analyzer \
-  --playwright-report artifacts/playwright-report.json \
-  --test-results test-results \
-  --output-md reports/fail-analysis.md \
-  --output-json reports/fail-analysis.json \
-  --mode local \
-  --log-file artifacts/playwright-run.log
-```
-
-### Analyzer Architecture
-
-The Python analyzer is modular and intentionally extensible:
-
-- collectors
-  - gather reports, logs, and artifacts
-- parsers
-  - turn Playwright-specific outputs into normalized models
-- analyzers
-  - classify failures, score likely causes, detect flakiness, and cluster related failures
-- reporters
-  - write Markdown and JSON output
-
-This keeps Playwright-specific parsing isolated so future adapters for pytest, Selenium, or Cypress can be added cleanly.
-
-## WebKit Support
-
-The framework is ready for WebKit, but the project remains commented out in [playwright.config.ts](/Users/vivedesh/ai-powered-playwright-automation/playwright.config.ts) on this machine.
-
-Why:
-
-- this machine is on macOS 12
-- the installed Playwright WebKit runtime requires a newer environment here
-
-How to enable on a supported machine:
-
-1. Install WebKit:
-
-```bash
-npx playwright install webkit
-```
-
-2. Uncomment the `webkit` project in [playwright.config.ts](/Users/vivedesh/ai-powered-playwright-automation/playwright.config.ts)
-
-3. Run:
-
-```bash
-npm run test:webkit
-```
-
-## Recommended Daily Workflow
-
-For normal development:
+### Recommended Pipeline Commands
 
 ```bash
 npm run typecheck
-PLAYWRIGHT_WORKERS=4 npm run test:ui
+npm run test:analyze:ci
 ```
 
-For full failure analysis:
+### Report Consumption Order After Failure
 
-```bash
-PLAYWRIGHT_WORKERS=4 npm run test:analyze
-```
+When a CI run fails, inspect artifacts in this order:
 
-If the suite was run directly without the wrapper:
+1. `reports/fail-analysis.status.json`
+2. `reports/fail-analysis.md`
+3. `reports/fail-analysis.json`
+4. `artifacts/playwright-report.json`
+5. `test-results/`
 
-```bash
-npm run analyzer:run
-```
+## Enterprise Outlook
 
-## Future AI Direction
+The current architecture is intentionally positioned to evolve beyond test execution into a broader AI-assisted quality engineering platform.
 
-The repository is intentionally structured to grow into a broader AI-assisted quality engineering platform. Natural next additions include:
+Planned extension areas include:
 
-- setup and onboarding agents
 - flaky-test triage agents
 - locator repair suggestions
 - CI comment publishing for failure summaries
-- historical run comparison and trend-based clustering
-
-## Notes
-
-- the analyzer wrapper is the recommended execution path
-- the HTML Playwright report is configured with `open: 'never'` so runs can complete cleanly and hand off to the analyzer
-- analyzer output is synchronous: once the wrapper command finishes, the report should already exist
-- if the report does not look fresh, check the status file first
+- historical run comparison and failure clustering
+- onboarding and troubleshooting assistants for test operators
