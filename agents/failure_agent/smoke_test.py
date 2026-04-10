@@ -5,12 +5,12 @@ import sys
 import tempfile
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
+REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from tools.failure_analyzer.cli import run_analysis
-from tools.failure_analyzer.config import AnalyzerConfig, OpenAIConfig
+from agents.failure_agent.cli import run_analysis
+from agents.failure_agent.config import AnalyzerConfig, OpenAIConfig
 
 
 def main() -> int:

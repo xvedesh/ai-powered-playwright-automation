@@ -11,14 +11,14 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import List, Optional
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
+REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from tools.failure_analyzer.cli import run_analysis
-from tools.failure_analyzer.config import AnalyzerConfig
-from tools.failure_analyzer.utils.env_utils import load_dotenv_if_present
-from tools.failure_analyzer.config import OpenAIConfig
+from agents.failure_agent.cli import run_analysis
+from agents.failure_agent.config import AnalyzerConfig
+from agents.failure_agent.config import OpenAIConfig
+from agents.failure_agent.utils.env_utils import load_dotenv_if_present
 
 
 DEFAULT_REPORT = Path("artifacts/playwright-report.json")

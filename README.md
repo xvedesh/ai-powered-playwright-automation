@@ -7,6 +7,11 @@
 
 Enterprise-grade Playwright + TypeScript automation framework for UI, API, and integration testing. It is designed for modern quality engineering teams that need reliable execution, actionable diagnostics, and an architecture that can scale from local development to CI pipelines with self-healing-ready foundations.
 
+The repository now includes two complementary AI workflows:
+
+- a Setup / Troubleshooting Agent in `agents/setup_agent/` for guided onboarding, execution help, visible-run guidance, and report troubleshooting
+- an AI Failure Analyzer in `agents/failure_agent/` for post-run root-cause analysis
+
 ## Value Proposition
 
 This framework is built to do more than execute tests. It is designed to shorten debugging cycles, reduce operational noise, and improve delivery confidence through automated diagnostics and durable test architecture.
@@ -51,6 +56,26 @@ How it works:
 - Optional OpenAI enrichment adds a higher-level summary when `OPENAI_API_KEY` is configured
 - If OpenAI is unavailable, the analyzer still produces local reports without blocking execution
 
+## Setup & Troubleshooting Agent
+
+The setup assistant is a repository-aware Python CLI that mirrors the framework guidance in the README and can answer practical questions about setup, execution, headed runs, report lookup, and troubleshooting.
+
+Typical use cases:
+
+- first-time setup and prerequisite checks
+- choosing the right test command for UI, API, or integration coverage
+- running tests in headed or debug mode
+- locating Playwright and AI diagnostic reports
+- troubleshooting analyzer, environment, or execution issues
+
+Run the assistant:
+
+```bash
+npm run agent:run
+```
+
+The assistant works best with `OPENAI_API_KEY` configured, but it still provides built-in framework guidance for the core setup and troubleshooting flows when the key is absent.
+
 ### Diagnostic Inputs
 
 The analyzer evaluates available execution evidence, including:
@@ -86,7 +111,8 @@ The framework follows an enterprise testing architecture that separates concerns
 - `src/api/` provides service abstractions so tests validate behavior, not raw HTTP plumbing
 - `src/fixtures/` centralizes shared browser and dependency injection behavior
 - `src/core/` contains cross-cutting capabilities such as auth state and browser protections
-- `tools/failure_analyzer/` isolates the diagnostics engine into collectors, parsers, analyzers, and reporters
+- `agents/failure_agent/` isolates the diagnostics engine into collectors, parsers, analyzers, and reporters
+- `agents/setup_agent/` provides a repository-aware setup and troubleshooting assistant
 
 ### Tech Stack
 
@@ -182,6 +208,7 @@ npm run test:analyze:ci
 Useful supporting commands:
 
 ```bash
+npm run agent:run
 npm run test:setup
 npm run test:headed
 npm run test:debug
@@ -217,10 +244,9 @@ PLAYWRIGHT_WORKERS=75% npm run test:ui
 │   ├── integration-tests/
 │   ├── setup/
 │   └── ui-tests/
-├── tools/
-│   ├── failure_analyzer/
-│   ├── failure_analyzer_smoke_test.py
-│   └── run_playwright_with_analysis.py
+├── agents/
+│   ├── failure_agent/
+│   └── setup_agent/
 ├── artifacts/
 ├── reports/
 ├── playwright.config.ts
